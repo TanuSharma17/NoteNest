@@ -1,98 +1,63 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import ToDoLists from './ToDoLists';
 
-const App = ()=>{
-  const[fullName,setFullName] = useState({
-    fname:"",
-    lname:"",
-    email:"",
-    phone:"",
-  });
-  
 
-  const inputEvent=(event)=>{
-    //  setFullName(event.target.value);
-    const value=event.target.value;
-    const name=event.target.name;
-    // const[value,name] = event.target;
+const App =()=>{
 
-    setFullName((preValue) => {
-      return{
-        ...preValue,
-        [name]:value,
-      };
-      // if(name==="fname"){
-      //   return{
-      //   fname:value,
-      //   lname:preValue.lname,
-      //   email:preValue.email,
-      //   phone:preValue.phone,
-      //   };
-      // } else if(name==="lname"){
-      //   return{
-      //     fname:preValue.fname,
-      //     lname:value,
-      //     email:preValue.email,
-      //     phone:preValue.phone,
-      //   };
-      // } else if(name==="email"){
-      //   return{
-      //     fname:preValue.fname,
-      //     lname:preValue.lname,
-      //     email:value,
-      //     phone:preValue.phone,
-      //   };
-      //   } else if(name==="phone"){
-      //     return{
-      //       fname:preValue.fname,
-      //       lname:preValue.lname,
-      //       email:preValue.email,
-      //       phone:value,
-      //     };
-        // }
+  const [inputList,setInputList] = useState("");
+  const[items,setItems] = useState([]);
+
+  const itemEvent=(event)=>{
+  setInputList(event.target.value);
+
+  }
+
+  const listOfItems=()=>{
+    setItems((oldItems)=>{
+        return[...oldItems,inputList];
     });
+    setInputList("");
   };
 
-
-  const onSubmit= (event)=>{
-    event.preventDefault(); // submit hokr auto refresh nhi hoga
-    alert('form submitted');
+  const deleteItems=(id)=>{
+    setItems((oldItems)=>{
+      return oldItems.filter((arrElem,index)=>{
+        return index!=id;
+      })
+    })
   };
 
   return(
     <>
     <div className='main_div'>
-    <form onSubmit={onSubmit}>
-      <div>
-        <h1> Hello {fullName.fname} {fullName.lname} </h1>
-        <p>{fullName.email}</p>
-        <p>{fullName.phone}</p>
-        <input type="text" placeholder ='Enter Your Name' name="fname"
-          onChange={inputEvent} 
-          value={fullName.fname}
-          />
-          {/* <br/> */}
-          <input type="text" placeholder ='Enter Last Name' name="lname"
-          onChange={inputEvent}
-           value={fullName.lname}
-          />   
+      <div className='center_div'>
+         <br/>
+         <h1> TANU'S TO DO List </h1>
 
-          <input type="email" placeholder ='Enter Your Email' name="email"
-          onChange={inputEvent} 
-          value={fullName.email}
-          // autoComplete='off'
-          />
+         <input type="text" placeholder="Add Items" onChange ={itemEvent} 
+          value={inputList}
+         />
+         <button onClick={listOfItems}> + </button>
 
-          <input type="number" placeholder ='Enter Mobile Number' name="phone"
-          onChange={inputEvent} 
-          value={fullName.phone}
-          />
+         <ol>
+          {/* <li> {inputList} </li> */}
 
-        <button type ='submit' onClick ={onSubmit}> Submit 😸 </button>
+         {items.map((itemval,index) => {
+             return <ToDoLists
+             key={index}
+             id={index}
+             text={itemval} 
+              onSelect={deleteItems}
+             />
+          })
+          }
+
+         </ol>
       </div>
-    </form>
-     </div>
+    </div>
+
     </>
-   );
+  );
 };
 
 export default App;
